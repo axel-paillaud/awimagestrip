@@ -215,7 +215,7 @@ class Ps_ImageSlider extends Module implements WidgetInterface
      */
     protected function deleteTables()
     {
-        $slides = $this->getSlides();
+        $slides = $this->getSlides(null, true);
         foreach ($slides as $slide) {
             $to_del = new Ps_HomeSlide($slide['id_slide']);
             $to_del->delete();
@@ -655,7 +655,15 @@ class Ps_ImageSlider extends Module implements WidgetInterface
         return ++$row['next_position'];
     }
 
-    public function getSlides($active = null)
+    /**
+     * Get slides
+     *
+     * @param bool $active
+     * @param bool $forceShowAll Include all slides, even those without image for a given language
+     *
+     * @return array
+     */
+    public function getSlides($active = null, $forceShowAll = false)
     {
         $this->context = Context::getContext();
         $id_shop = $this->context->shop->id;
@@ -668,8 +676,8 @@ class Ps_ImageSlider extends Module implements WidgetInterface
             LEFT JOIN ' . _DB_PREFIX_ . 'homeslider_slides hss ON (hs.id_homeslider_slides = hss.id_homeslider_slides)
             LEFT JOIN ' . _DB_PREFIX_ . 'homeslider_slides_lang hssl ON (hss.id_homeslider_slides = hssl.id_homeslider_slides)
             WHERE id_shop = ' . (int) $id_shop . '
-            AND hssl.id_lang = ' . (int) $id_lang . '
-            AND hssl.`image` <> ""' .
+            AND hssl.id_lang = ' . (int) $id_lang .
+            ($forceShowAll ? '' : ' AND hssl.`image` <> ""') .
             ($active ? ' AND hss.`active` = 1' : ' ') . '
             ORDER BY hss.position'
         );
@@ -732,7 +740,7 @@ class Ps_ImageSlider extends Module implements WidgetInterface
 
     public function renderList()
     {
-        $slides = $this->getSlides();
+        $slides = $this->getSlides(null, true);
         foreach ($slides as $key => $slide) {
             $slides[$key]['status'] = $this->displayStatus($slide['id_slide'], $slide['active']);
             $associated_shop_ids = Ps_HomeSlide::getAssociatedIdsShop((int) $slide['id_slide']);
