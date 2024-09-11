@@ -48,15 +48,11 @@ class Ps_ImageSlider extends Module implements WidgetInterface
      */
     public $secure_key;
 
-    public $adminControllers = [
-        'adminConfigureSlides' => 'AdminConfigureSlides',
-    ];
-
     public function __construct()
     {
         $this->name = 'ps_imageslider';
         $this->tab = 'front_office_features';
-        $this->version = '3.1.4';
+        $this->version = '3.2.0';
         $this->author = 'PrestaShop';
         $this->need_instance = 0;
         $this->secure_key = Tools::hash($this->name);
@@ -79,6 +75,7 @@ class Ps_ImageSlider extends Module implements WidgetInterface
         /* Adds Module */
         if (
             parent::install() &&
+            $this->installTab() &&
             $this->registerHook('displayHeader') &&
             $this->registerHook('displayHome') &&
             $this->registerHook('actionShopDataDuplication')
@@ -129,6 +126,21 @@ class Ps_ImageSlider extends Module implements WidgetInterface
         return false;
     }
 
+    public function installTab()
+    {
+        $tab = new Tab();
+        $tab->class_name = 'AdminConfigureSlides';
+        $tab->module = $this->name;
+        $tab->active = true;
+        $tab->id_parent = -1;
+        $tab->name = array_fill_keys(
+            Language::getIDs(false),
+            $this->displayName
+        );
+
+        return $tab->add();
+    }
+
     /**
      * Adds samples
      */
@@ -162,6 +174,9 @@ class Ps_ImageSlider extends Module implements WidgetInterface
             /* Deletes tables */
             $res = $this->deleteTables();
 
+            /* Delete hidden tab */
+            $res &= $this->uninstallTab();
+
             /* Unsets configuration */
             $res &= Configuration::deleteByName('HOMESLIDER_SPEED');
             $res &= Configuration::deleteByName('HOMESLIDER_PAUSE_ON_HOVER');
@@ -171,6 +186,18 @@ class Ps_ImageSlider extends Module implements WidgetInterface
         }
 
         return false;
+    }
+
+    public function uninstallTab()
+    {
+        $result = true;
+        $id_tab = (int) Tab::getIdFromClassName('AdminConfigureSlides');
+        $tab = new Tab($id_tab);
+        if (Validate::isLoadedObject($tab)) {
+            $result = $tab->delete();
+        }
+
+        return $result;
     }
 
     /**
@@ -617,6 +644,7 @@ class Ps_ImageSlider extends Module implements WidgetInterface
 
     public function headerHTML()
     {
+        // Run only on module configuration page
         if ('AdminModules' !== Tools::getValue('controller') ||
             Tools::getValue('configure') !== $this->name ||
             Tools::getIsset('id_slide') ||
@@ -625,6 +653,7 @@ class Ps_ImageSlider extends Module implements WidgetInterface
         }
 
         $this->context->controller->addJS($this->_path . 'js/Sortable.min.js');
+
         /* Style & js for fieldset 'slides configuration' */
         $html = '<script type="text/javascript">
               $(function() {
@@ -637,14 +666,12 @@ class Ps_ImageSlider extends Module implements WidgetInterface
                     var ajaxCallParameters = {
                         ajax: true,
                         action: "updateSlidesPosition",
-                        secure_key: "'.$this->secure_key.'",
-                        token: "'.Tools::getAdminTokenLite('AdminConfigureSlides') .'",
                         slides: sortableIdsAsData
                     };
                     $.ajax({
                       type: "POST",
                       cache: false,
-                      url: "'.$this->context->link->getAdminLink('AdminConfigureSlides', false).'",
+                      url: "' . $this->context->link->getAdminLink('AdminConfigureSlides') . '",
                       data: ajaxCallParameters
                     });
                   }

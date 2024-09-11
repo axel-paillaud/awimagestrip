@@ -19,32 +19,30 @@
  */
 class AdminConfigureSlidesController extends ModuleAdminController
 {
-    public $module;
-
-    /**
-     * This function allow to delete users
-     */
     public function ajaxProcessUpdateSlidesPosition()
     {
-		$home_slider = $this->module;
-		$slides = [];
+        if (empty(Tools::getValue('action')) || Tools::getValue('action') != 'updateSlidesPosition' || empty(Tools::getValue('slides'))) {
+            ob_end_clean();
+            header('Content-Type: application/json');
+            $this->ajaxRender(json_encode(['error' => true]));
+            exit;
+        }
 
-		if (!Tools::isSubmit('secure_key') || Tools::getValue('secure_key') != $home_slider->secure_key || !Tools::getValue('action')) {
-        	$this->ajaxDie(json_encode(['error' => true]));
-		}
-
-		if (Tools::getValue('action') == 'updateSlidesPosition' && Tools::getValue('slides')) {
-		    $slides = Tools::getValue('slides');
-
-		    foreach ($slides as $position => $id_slide) {
-		        $res = Db::getInstance()->execute('
+        // Get slides and update their position
+        $slides = Tools::getValue('slides');
+        foreach ($slides as $position => $id_slide) {
+            Db::getInstance()->execute('
 					UPDATE `' . _DB_PREFIX_ . 'homeslider_slides` SET `position` = ' . (int) $position . '
 					WHERE `id_homeslider_slides` = ' . (int) $id_slide
-		        );
-		    }
+                );
+        }
 
-		    $home_slider->clearCache();
-		}
-        	$this->ajaxDie(json_encode(['success' => true]));
+        // Wipe module cache
+        $this->module->clearCache();
+
+        ob_end_clean();
+        header('Content-Type: application/json');
+        $this->ajaxRender(json_encode(['success' => true]));
+        exit;
     }
 }
