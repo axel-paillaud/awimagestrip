@@ -645,43 +645,51 @@ class Ps_ImageSlider extends Module implements WidgetInterface
     public function headerHTML()
     {
         // Run only on module configuration page
-        if ('AdminModules' !== Tools::getValue('controller') ||
-            Tools::getValue('configure') !== $this->name ||
-            Tools::getIsset('id_slide') ||
-            Tools::getIsset('addSlide')) {
+        if (Tools::getValue('controller') != 'AdminModules' || Tools::getValue('configure') !== $this->name) {
             return;
         }
 
-        $this->context->controller->addJS($this->_path . 'js/Sortable.min.js');
+        // Add sortable library
+        $this->context->controller->addJS($this->_path . 'js/Sortable.min.js?v=' . $this->version);
 
-        /* Style & js for fieldset 'slides configuration' */
-        $html = '<script type="text/javascript">
-              $(function() {
-                var $mySlides = $("#slides");
-                new Sortable($mySlides[0], {
-                  animation: 150,
-                  onUpdate: function(event) {
+        // Add sorting scripts
+        $html = '
+        <script type="text/javascript">
+            $(function () {
+                var slideList = $("#slides");
+            
+                // Check if the list exists, so we dont run it on edit page
+                if (!slideList.length) {
+                return;
+                }
+            
+                new Sortable(slideList[0], {
+                animation: 150,
+                onUpdate: function (event) {
                     var sortableIdsAsTableString = this.toArray();
                     var sortableIdsAsData = sortableIdsAsTableString.map((x) => x.slice(-1));
                     var ajaxCallParameters = {
-                        ajax: true,
-                        action: "updateSlidesPosition",
-                        slides: sortableIdsAsData
+                    ajax: true,
+                    action: "updateSlidesPosition",
+                    slides: sortableIdsAsData
                     };
                     $.ajax({
-                      type: "POST",
-                      cache: false,
-                      url: "' . $this->context->link->getAdminLink('AdminConfigureSlides') . '",
-                      data: ajaxCallParameters
+                    type: "POST",
+                    cache: false,
+                    url: "' . $this->context->link->getAdminLink('AdminConfigureSlides') . '",
+                    data: ajaxCallParameters
                     });
-                  }
+                }
                 });
-                $mySlides.hover(function() {
-                    $(this).css("cursor","move");
-                    },
-                    function() {
-                    $(this).css("cursor","auto");
-                });
+            
+                slideList.hover(
+                function () {
+                    $(this).css("cursor", "move");
+                },
+                function () {
+                    $(this).css("cursor", "auto");
+                }
+                );
             });
         </script>';
 
