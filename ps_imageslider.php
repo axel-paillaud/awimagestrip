@@ -666,12 +666,11 @@ class Ps_ImageSlider extends Module implements WidgetInterface
                 new Sortable(slideList[0], {
                 animation: 150,
                 onUpdate: function (event) {
-                    var sortableIdsAsTableString = this.toArray();
-                    var sortableIdsAsData = sortableIdsAsTableString.map((x) => x.slice(-1));
+                    var slideIdList = this.toArray();
                     var ajaxCallParameters = {
                     ajax: true,
                     action: "updateSlidesPosition",
-                    slides: sortableIdsAsData
+                    slides: slideIdList
                     };
                     $.ajax({
                     type: "POST",
