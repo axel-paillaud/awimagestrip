@@ -9,11 +9,18 @@
             "email": "contact@prestashop.com"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/axel-paillaud/ps-dev-tools"
+        }
+    ],
     "require": {
         "php": ">=5.4.0"
     },
     "require-dev": {
-        "prestashop/php-dev-tools": "^4.3"
+        "prestashop/php-dev-tools": "^4.3",
+        "axel-paillaud/ps-dev-tools": "dev-main"
     },
     "config": {
         "preferred-install": "dist",
