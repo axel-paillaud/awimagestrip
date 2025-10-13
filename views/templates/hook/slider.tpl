@@ -26,7 +26,7 @@
             <img src="{$slide.image_url}" alt="{$slide.legend|escape}" class="awimagestrip-image" width="640" height="853" loading="lazy" />
             {if $slide.title}
               <div class="awimagestrip-title-box">
-                <h3 class="awimagestrip-title">{$slide.title}</h3>
+                <h2 class="awimagestrip-title">{$slide.title}</h2>
               </div>
             {/if}
             {if $slide.description}
