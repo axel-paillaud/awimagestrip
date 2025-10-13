@@ -16,9 +16,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *}
-<div class="panel"><h3><i class="icon-list-ul"></i> {l s='Slides list' d='Modules.Imageslider.Admin'}
+<div class="panel"><h3><i class="icon-list-ul"></i> {l s='Slides list' d='Modules.AwImageStrip.Admin'}
 	<span class="panel-heading-action">
-		<a id="desc-product-new" class="list-toolbar-btn" href="{$link->getAdminLink('AdminModules')}&configure=ps_imageslider&addSlide=1">
+		<a id="desc-product-new" class="list-toolbar-btn" href="{$link->getAdminLink('AdminModules')}&configure=awimagestrip&addSlide=1">
 			<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Add new' d='Admin.Actions'}" data-html="true">
 				<i class="process-icon-new "></i>
 			</span>
@@ -42,7 +42,7 @@
 								{if $slide.is_shared}
 									<div>
 										<span class="label color_field pull-left" style="background-color:#108510;color:white;margin-top:5px;">
-											{l s='Shared slide' d='Modules.Imageslider.Admin'}
+											{l s='Shared slide' d='Modules.AwImageStrip.Admin'}
 										</span>
 									</div>
 								{/if}
@@ -51,12 +51,12 @@
 								{$slide.status}
 
 								<a class="btn btn-default"
-									href="{$link->getAdminLink('AdminModules')}&configure=ps_imageslider&id_slide={$slide.id_slide}">
+									href="{$link->getAdminLink('AdminModules')}&configure=awimagestrip&id_slide={$slide.id_slide}">
 									<i class="icon-edit"></i>
 									{l s='Edit' d='Admin.Actions'}
 								</a>
 								<a class="btn btn-default"
-									href="{$link->getAdminLink('AdminModules')}&configure=ps_imageslider&delete_id_slide={$slide.id_slide}">
+									href="{$link->getAdminLink('AdminModules')}&configure=awimagestrip&delete_id_slide={$slide.id_slide}">
 									<i class="icon-trash"></i>
 									{l s='Delete' d='Admin.Actions'}
 								</a>

@@ -1,7 +1,7 @@
 {
-    "name": "prestashop/ps_imageslider",
-    "description": "PrestaShop - Image slider",
-    "homepage": "https://github.com/PrestaShop/ps_imageslider",
+    "name": "prestashop/awimagestrip",
+    "description": "PrestaShop - Image strip",
+    "homepage": "https://github.com/PrestaShop/awimagestrip",
     "license": "AFL-3.0",
     "authors": [
         {
@@ -22,7 +22,7 @@
     "type": "prestashop-module",
     "autoload": {
         "classmap": [
-            "ps_imageslider.php"
+            "awimagestrip.php"
         ]
     },
     "author": "PrestaShop"

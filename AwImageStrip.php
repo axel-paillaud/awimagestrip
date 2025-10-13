@@ -17,7 +17,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-class Ps_HomeSlide extends ObjectModel
+class AwImageStrip extends ObjectModel
 {
     public $title;
     public $description;
@@ -111,7 +111,7 @@ class Ps_HomeSlide extends ObjectModel
         );
 
         foreach ($rows as $row) {
-            $current_slide = new Ps_HomeSlide($row['id_slide']);
+            $current_slide = new AwImageStrip($row['id_slide']);
             --$current_slide->position;
             $current_slide->update();
             unset($current_slide);
