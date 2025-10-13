@@ -567,8 +567,6 @@ class AwImageStrip extends Module implements WidgetInterface
     public function hookdisplayHeader($params)
     {
         $this->context->controller->registerStylesheet('modules-awimagestrip', 'modules/' . $this->name . '/css/awimagestrip.css', ['media' => 'all', 'priority' => 150]);
-        $this->context->controller->registerJavascript('modules-responsiveslides', 'modules/' . $this->name . '/js/responsiveslides.min.js', ['position' => 'bottom', 'priority' => 150]);
-        $this->context->controller->registerJavascript('modules-awimagestrip', 'modules/' . $this->name . '/js/awimagestrip.js', ['position' => 'bottom', 'priority' => 150]);
     }
 
     public function renderWidget($hookName = null, array $configuration = [])

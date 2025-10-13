@@ -18,21 +18,21 @@
  *}
 
 {if $awimagestrip.slides}
-  <div class="awimagestrip-container" data-interval="{$awimagestrip.speed}" data-wrap="{$awimagestrip.wrap}" data-pause="{$awimagestrip.pause}">
-    <ul class="rslides">
+  <div class="awimagestrip-container">
+    <div class="awimagestrip-grid">
       {foreach from=$awimagestrip.slides item=slide}
-        <li class="slide">
-          {if !empty($slide.url)}<a href="{$slide.url}">{/if}
-            <img src="{$slide.image_url}" alt="{$slide.legend|escape}" />
+        <div class="awimagestrip-slide">
+          {if !empty($slide.url)}<a href="{$slide.url}" class="awimagestrip-link">{/if}
+            <img src="{$slide.image_url}" alt="{$slide.legend|escape}" class="awimagestrip-image" />
             {if $slide.title || $slide.description }
-              <span class="caption">
-                <h2>{$slide.title}</h2>
-                <div>{$slide.description nofilter}</div>
-              </span>
+              <div class="awimagestrip-caption">
+                {if $slide.title}<h3 class="awimagestrip-title">{$slide.title}</h3>{/if}
+                {if $slide.description}<div class="awimagestrip-description">{$slide.description nofilter}</div>{/if}
+              </div>
             {/if}
           {if !empty($slide.url)}</a>{/if}
-        </li>
+        </div>
       {/foreach}
-    </ul>
+    </div>
   </div>
 {/if}
