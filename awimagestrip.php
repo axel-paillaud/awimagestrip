@@ -34,7 +34,7 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
-include_once __DIR__ . '/AwImageStrip.php';
+include_once __DIR__ . '/AwImageStripSlide.php';
 
 class AwImageStrip extends Module implements WidgetInterface
 {
@@ -148,7 +148,7 @@ class AwImageStrip extends Module implements WidgetInterface
     {
         $languages = Language::getLanguages(false);
         for ($i = 1; $i <= 3; ++$i) {
-            $slide = new AwImageStrip();
+            $slide = new AwImageStripSlide();
             $slide->position = $i;
             $slide->active = 1;
             foreach ($languages as $language) {
@@ -248,7 +248,7 @@ class AwImageStrip extends Module implements WidgetInterface
     {
         $slides = $this->getSlides(null, true);
         foreach ($slides as $slide) {
-            $to_del = new AwImageStrip($slide['id_slide']);
+            $to_del = new AwImageStripSlide($slide['id_slide']);
             $to_del->delete();
         }
 
@@ -291,7 +291,7 @@ class AwImageStrip extends Module implements WidgetInterface
                     $this->_html .= $this->getShopContextError(null, $mode);
                 }
             } else {
-                $associated_shop_ids = AwImageStrip::getAssociatedIdsShop((int) Tools::getValue('id_slide'));
+                $associated_shop_ids = AwImageStripSlide::getAssociatedIdsShop((int) Tools::getValue('id_slide'));
                 $context_shop_id = (int) Shop::getContextShopID();
 
                 if ($associated_shop_ids === false) {
@@ -451,7 +451,7 @@ class AwImageStrip extends Module implements WidgetInterface
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules', true) . '&conf=6&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name);
             }
         } elseif (Tools::isSubmit('changeStatus') && Tools::isSubmit('id_slide')) {
-            $slide = new AwImageStrip((int) Tools::getValue('id_slide'));
+            $slide = new AwImageStripSlide((int) Tools::getValue('id_slide'));
             if ($slide->active == 0) {
                 $slide->active = 1;
             } else {
@@ -463,14 +463,14 @@ class AwImageStrip extends Module implements WidgetInterface
         } elseif (Tools::isSubmit('submitSlide')) {
             /* Sets ID if needed */
             if (Tools::getValue('id_slide')) {
-                $slide = new AwImageStrip((int) Tools::getValue('id_slide'));
+                $slide = new AwImageStripSlide((int) Tools::getValue('id_slide'));
                 if (!Validate::isLoadedObject($slide)) {
                     $this->_html .= $this->displayError($this->trans('Invalid slide ID', [], 'Modules.AwImageStrip.Admin'));
 
                     return false;
                 }
             } else {
-                $slide = new AwImageStrip();
+                $slide = new AwImageStripSlide();
                 /* Sets position */
                 $slide->position = (int) $this->getNextPosition();
             }
@@ -544,7 +544,7 @@ class AwImageStrip extends Module implements WidgetInterface
                 $this->clearCache();
             }
         } elseif (Tools::isSubmit('delete_id_slide')) {
-            $slide = new AwImageStrip((int) Tools::getValue('delete_id_slide'));
+            $slide = new AwImageStripSlide((int) Tools::getValue('delete_id_slide'));
             $res = $slide->delete();
             $this->clearCache();
             if (!$res) {
@@ -795,7 +795,7 @@ class AwImageStrip extends Module implements WidgetInterface
         $slides = $this->getSlides(null, true);
         foreach ($slides as $key => $slide) {
             $slides[$key]['status'] = $this->displayStatus($slide['id_slide'], $slide['active']);
-            $associated_shop_ids = AwImageStrip::getAssociatedIdsShop((int) $slide['id_slide']);
+            $associated_shop_ids = AwImageStripSlide::getAssociatedIdsShop((int) $slide['id_slide']);
             if ($associated_shop_ids && count($associated_shop_ids) > 1) {
                 $slides[$key]['is_shared'] = true;
             } else {
@@ -882,7 +882,7 @@ class AwImageStrip extends Module implements WidgetInterface
         ];
 
         if (Tools::isSubmit('id_slide') && $this->slideExists((int) Tools::getValue('id_slide'))) {
-            $slide = new AwImageStrip((int) Tools::getValue('id_slide'));
+            $slide = new AwImageStripSlide((int) Tools::getValue('id_slide'));
             $fields_form['form']['input'][] = ['type' => 'hidden', 'name' => 'id_slide'];
             $fields_form['form']['images'] = $slide->image;
 
@@ -1033,7 +1033,7 @@ class AwImageStrip extends Module implements WidgetInterface
             $slide = new AwImageStrip((int) Tools::getValue('id_slide'));
             $fields['id_slide'] = (int) Tools::getValue('id_slide', $slide->id);
         } else {
-            $slide = new AwImageStrip();
+            $slide = new AwImageStripSlide();
         }
 
         $fields['active_slide'] = Tools::getValue('active_slide', $slide->active);
