@@ -52,8 +52,8 @@ class AwImageStrip extends Module implements WidgetInterface
     {
         $this->name = 'awimagestrip';
         $this->tab = 'front_office_features';
-        $this->version = '3.2.1';
-        $this->author = 'PrestaShop';
+        $this->version = '1.0.0';
+        $this->author = 'Axelweb';
         $this->need_instance = 0;
         $this->secure_key = Tools::hash($this->name);
         $this->bootstrap = true;
@@ -61,7 +61,7 @@ class AwImageStrip extends Module implements WidgetInterface
         parent::__construct();
 
         $this->displayName = $this->trans('Image strip', [], 'Modules.AwImageStrip.Admin');
-        $this->description = $this->trans('Add sliding images to your homepage to welcome your visitors in a visual and friendly way.', [], 'Modules.AwImageStrip.Admin');
+        $this->description = $this->trans('Image Slider with three vertical images on desktop, then 1 image that scrolls on mobile.', [], 'Modules.AwImageStrip.Admin');
         $this->ps_versions_compliancy = ['min' => '1.7.5.0', 'max' => _PS_VERSION_];
 
         $this->templateFile = 'module:awimagestrip/views/templates/hook/slider.tpl';
