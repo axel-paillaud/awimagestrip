@@ -59,11 +59,16 @@ class AwImageStrip extends Module implements WidgetInterface
 
         parent::__construct();
 
-        $this->displayName = $this->trans('Image strip', [], 'Modules.AwImageStrip.Admin');
-        $this->description = $this->trans('Image Slider with three vertical images on desktop, then 1 image that scrolls on mobile.', [], 'Modules.AwImageStrip.Admin');
+        $this->displayName = $this->trans('Image strip', [], 'Modules.Awimagestrip.Admin');
+        $this->description = $this->trans('Image Slider with three vertical images on desktop, then 1 image that scrolls on mobile.', [], 'Modules.Awimagestrip.Admin');
         $this->ps_versions_compliancy = ['min' => '1.7.5.0', 'max' => _PS_VERSION_];
 
         $this->templateFile = 'module:awimagestrip/views/templates/hook/slider.tpl';
+    }
+
+    public function isUsingNewTranslationSystem(): bool
+    {
+        return true;
     }
 
     /**
@@ -323,59 +328,59 @@ class AwImageStrip extends Module implements WidgetInterface
         /* Validation for Slider configuration */
         if (Tools::isSubmit('submitSlider')) {
             if (!Validate::isInt(Tools::getValue('AWIMAGESTRIP_SPEED'))) {
-                $errors[] = $this->trans('Invalid values', [], 'Modules.AwImageStrip.Admin');
+                $errors[] = $this->trans('Invalid values', [], 'Modules.Awimagestrip.Admin');
             }
         } elseif (Tools::isSubmit('changeStatus')) {
             if (!Validate::isInt(Tools::getValue('id_slide'))) {
-                $errors[] = $this->trans('Invalid slide', [], 'Modules.AwImageStrip.Admin');
+                $errors[] = $this->trans('Invalid slide', [], 'Modules.Awimagestrip.Admin');
             }
         } elseif (Tools::isSubmit('submitSlide')) {
             /* Checks state (active) */
             if (!Validate::isInt(Tools::getValue('active_slide')) || (Tools::getValue('active_slide') != 0 && Tools::getValue('active_slide') != 1)) {
-                $errors[] = $this->trans('Invalid slide state.', [], 'Modules.AwImageStrip.Admin');
+                $errors[] = $this->trans('Invalid slide state.', [], 'Modules.Awimagestrip.Admin');
             }
             /* If edit : checks id_slide */
             if (Tools::isSubmit('id_slide')) {
                 if (!Validate::isInt(Tools::getValue('id_slide')) && !$this->slideExists(Tools::getValue('id_slide'))) {
-                    $errors[] = $this->trans('Invalid slide ID', [], 'Modules.AwImageStrip.Admin');
+                    $errors[] = $this->trans('Invalid slide ID', [], 'Modules.Awimagestrip.Admin');
                 }
             }
             /* Checks title/url/legend/description/image */
             $languages = Language::getLanguages(false);
             foreach ($languages as $language) {
                 if (Tools::strlen(Tools::getValue('title_' . $language['id_lang'])) > 255) {
-                    $errors[] = $this->trans('The title is too long.', [], 'Modules.AwImageStrip.Admin');
+                    $errors[] = $this->trans('The title is too long.', [], 'Modules.Awimagestrip.Admin');
                 }
                 if (Tools::strlen(Tools::getValue('legend_' . $language['id_lang'])) > 255) {
-                    $errors[] = $this->trans('The caption is too long.', [], 'Modules.AwImageStrip.Admin');
+                    $errors[] = $this->trans('The caption is too long.', [], 'Modules.Awimagestrip.Admin');
                 }
                 if (Tools::strlen(Tools::getValue('url_' . $language['id_lang'])) > 255) {
-                    $errors[] = $this->trans('The URL is too long.', [], 'Modules.AwImageStrip.Admin');
+                    $errors[] = $this->trans('The URL is too long.', [], 'Modules.Awimagestrip.Admin');
                 }
                 if (Tools::strlen(Tools::getValue('description_' . $language['id_lang'])) > 4000) {
-                    $errors[] = $this->trans('The description is too long.', [], 'Modules.AwImageStrip.Admin');
+                    $errors[] = $this->trans('The description is too long.', [], 'Modules.Awimagestrip.Admin');
                 }
                 if (Tools::strlen(Tools::getValue('url_' . $language['id_lang'])) > 0 && !Validate::isUrl(Tools::getValue('url_' . $language['id_lang']))) {
-                    $errors[] = $this->trans('The URL format is not correct.', [], 'Modules.AwImageStrip.Admin');
+                    $errors[] = $this->trans('The URL format is not correct.', [], 'Modules.Awimagestrip.Admin');
                 }
                 if (Tools::getValue('image_' . $language['id_lang']) != null && !Validate::isFileName(Tools::getValue('image_' . $language['id_lang']))) {
-                    $errors[] = $this->trans('Invalid filename.', [], 'Modules.AwImageStrip.Admin');
+                    $errors[] = $this->trans('Invalid filename.', [], 'Modules.Awimagestrip.Admin');
                 }
                 if (Tools::getValue('image_old_' . $language['id_lang']) != null && !Validate::isFileName(Tools::getValue('image_old_' . $language['id_lang']))) {
-                    $errors[] = $this->trans('Invalid filename.', [], 'Modules.AwImageStrip.Admin');
+                    $errors[] = $this->trans('Invalid filename.', [], 'Modules.Awimagestrip.Admin');
                 }
             }
 
             /* Checks title/legend/description for default lang */
             $id_lang_default = (int) Configuration::get('PS_LANG_DEFAULT');
             if (!Tools::isSubmit('has_picture') && (!isset($_FILES['image_' . $id_lang_default]) || empty($_FILES['image_' . $id_lang_default]['tmp_name']))) {
-                $errors[] = $this->trans('The image is not set.', [], 'Modules.AwImageStrip.Admin');
+                $errors[] = $this->trans('The image is not set.', [], 'Modules.Awimagestrip.Admin');
             }
             if (Tools::getValue('image_old_' . $id_lang_default) && !Validate::isFileName(Tools::getValue('image_old_' . $id_lang_default))) {
-                $errors[] = $this->trans('The image is not set.', [], 'Modules.AwImageStrip.Admin');
+                $errors[] = $this->trans('The image is not set.', [], 'Modules.Awimagestrip.Admin');
             }
         } elseif (Tools::isSubmit('delete_id_slide') && (!Validate::isInt(Tools::getValue('delete_id_slide')) || !$this->slideExists((int) Tools::getValue('delete_id_slide')))) {
-            $errors[] = $this->trans('Invalid slide ID', [], 'Modules.AwImageStrip.Admin');
+            $errors[] = $this->trans('Invalid slide ID', [], 'Modules.Awimagestrip.Admin');
         }
 
         /* Display errors if needed */
@@ -437,7 +442,7 @@ class AwImageStrip extends Module implements WidgetInterface
             $this->clearCache();
 
             if (!$res) {
-                $errors[] = $this->displayError($this->trans('The configuration could not be updated.', [], 'Modules.AwImageStrip.Admin'));
+                $errors[] = $this->displayError($this->trans('The configuration could not be updated.', [], 'Modules.Awimagestrip.Admin'));
             } else {
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules', true) . '&conf=6&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name);
             }
@@ -450,13 +455,13 @@ class AwImageStrip extends Module implements WidgetInterface
             }
             $res = $slide->update();
             $this->clearCache();
-            $this->_html .= ($res ? $this->displayConfirmation($this->trans('Configuration updated', [], 'Admin.Notifications.Success')) : $this->displayError($this->getTranslator()->trans('The configuration could not be updated.', [], 'Modules.AwImageStrip.Admin')));
+            $this->_html .= ($res ? $this->displayConfirmation($this->trans('Configuration updated', [], 'Admin.Notifications.Success')) : $this->displayError($this->getTranslator()->trans('The configuration could not be updated.', [], 'Modules.Awimagestrip.Admin')));
         } elseif (Tools::isSubmit('submitSlide')) {
             /* Sets ID if needed */
             if (Tools::getValue('id_slide')) {
                 $slide = new AwImageStripSlide((int) Tools::getValue('id_slide'));
                 if (!Validate::isLoadedObject($slide)) {
-                    $this->_html .= $this->displayError($this->trans('Invalid slide ID', [], 'Modules.AwImageStrip.Admin'));
+                    $this->_html .= $this->displayError($this->trans('Invalid slide ID', [], 'Modules.Awimagestrip.Admin'));
 
                     return false;
                 }
@@ -527,10 +532,10 @@ class AwImageStrip extends Module implements WidgetInterface
                 /* Adds */
                 if (!Tools::getValue('id_slide')) {
                     if (!$slide->add()) {
-                        $errors[] = $this->displayError($this->trans('The slide could not be added.', [], 'Modules.AwImageStrip.Admin'));
+                        $errors[] = $this->displayError($this->trans('The slide could not be added.', [], 'Modules.Awimagestrip.Admin'));
                     }
                 } elseif (!$slide->update()) {
-                    $errors[] = $this->displayError($this->trans('The slide could not be updated.', [], 'Modules.AwImageStrip.Admin'));
+                    $errors[] = $this->displayError($this->trans('The slide could not be updated.', [], 'Modules.Awimagestrip.Admin'));
                 }
                 $this->clearCache();
             }
@@ -808,7 +813,7 @@ class AwImageStrip extends Module implements WidgetInterface
         $fields_form = [
             'form' => [
                 'legend' => [
-                    'title' => $this->trans('Slide information', [], 'Modules.AwImageStrip.Admin'),
+                    'title' => $this->trans('Slide information', [], 'Modules.Awimagestrip.Admin'),
                     'icon' => 'icon-cogs',
                 ],
                 'input' => [
@@ -828,13 +833,13 @@ class AwImageStrip extends Module implements WidgetInterface
                     ],
                     [
                         'type' => 'text',
-                        'label' => $this->trans('Target URL', [], 'Modules.AwImageStrip.Admin'),
+                        'label' => $this->trans('Target URL', [], 'Modules.Awimagestrip.Admin'),
                         'name' => 'url',
                         'lang' => true,
                     ],
                     [
                         'type' => 'text',
-                        'label' => $this->trans('Caption', [], 'Modules.AwImageStrip.Admin'),
+                        'label' => $this->trans('Caption', [], 'Modules.Awimagestrip.Admin'),
                         'name' => 'legend',
                         'lang' => true,
                     ],
@@ -934,17 +939,17 @@ class AwImageStrip extends Module implements WidgetInterface
                 'input' => [
                     [
                         'type' => 'text',
-                        'label' => $this->trans('Speed', [], 'Modules.AwImageStrip.Admin'),
+                        'label' => $this->trans('Speed', [], 'Modules.Awimagestrip.Admin'),
                         'name' => 'AWIMAGESTRIP_SPEED',
                         'suffix' => 'milliseconds',
                         'class' => 'fixed-width-sm',
-                        'desc' => $this->trans('The duration of the transition between two slides.', [], 'Modules.AwImageStrip.Admin'),
+                        'desc' => $this->trans('The duration of the transition between two slides.', [], 'Modules.Awimagestrip.Admin'),
                     ],
                     [
                         'type' => 'switch',
-                        'label' => $this->trans('Pause on hover', [], 'Modules.AwImageStrip.Admin'),
+                        'label' => $this->trans('Pause on hover', [], 'Modules.Awimagestrip.Admin'),
                         'name' => 'AWIMAGESTRIP_PAUSE_ON_HOVER',
-                        'desc' => $this->trans('Stop sliding when the mouse cursor is over the slideshow.', [], 'Modules.AwImageStrip.Admin'),
+                        'desc' => $this->trans('Stop sliding when the mouse cursor is over the slideshow.', [], 'Modules.Awimagestrip.Admin'),
                         'values' => [
                             [
                                 'id' => 'active_on',
@@ -1037,7 +1042,7 @@ class AwImageStrip extends Module implements WidgetInterface
     protected function getMultiLanguageInfoMsg()
     {
         return '<p class="alert alert-warning">' .
-            $this->trans('Since multiple languages are activated on your shop, please mind to upload your image for each one of them', [], 'Modules.AwImageStrip.Admin') .
+            $this->trans('Since multiple languages are activated on your shop, please mind to upload your image for each one of them', [], 'Modules.Awimagestrip.Admin') .
             '</p>';
     }
 
@@ -1045,7 +1050,7 @@ class AwImageStrip extends Module implements WidgetInterface
     {
         if (Shop::getContext() == Shop::CONTEXT_GROUP || Shop::getContext() == Shop::CONTEXT_ALL) {
             return '<p class="alert alert-warning">' .
-                $this->trans('You cannot manage slides items from a "All Shops" or a "Group Shop" context, select directly the shop you want to edit', [], 'Modules.AwImageStrip.Admin') .
+                $this->trans('You cannot manage slides items from a "All Shops" or a "Group Shop" context, select directly the shop you want to edit', [], 'Modules.Awimagestrip.Admin') .
                 '</p>';
         } else {
             return '';
@@ -1060,11 +1065,11 @@ class AwImageStrip extends Module implements WidgetInterface
 
         if ($mode == 'edit') {
             return '<p class="alert alert-danger">' .
-                $this->trans('You can only edit this slide from the shop(s) context: %s', [$shop_contextualized_name], 'Modules.AwImageStrip.Admin') .
+                $this->trans('You can only edit this slide from the shop(s) context: %s', [$shop_contextualized_name], 'Modules.Awimagestrip.Admin') .
                 '</p>';
         } else {
             return '<p class="alert alert-danger">' .
-                $this->trans('You cannot add slides from a "All Shops" or a "Group Shop" context', [], 'Modules.AwImageStrip.Admin') .
+                $this->trans('You cannot add slides from a "All Shops" or a "Group Shop" context', [], 'Modules.Awimagestrip.Admin') .
                 '</p>';
         }
     }
@@ -1072,7 +1077,7 @@ class AwImageStrip extends Module implements WidgetInterface
     protected function getShopAssociationError($id_slide)
     {
         return '<p class="alert alert-danger">' .
-            $this->trans('Unable to get slide shop association information (id_slide: %d)', [(int) $id_slide], 'Modules.AwImageStrip.Admin') .
+            $this->trans('Unable to get slide shop association information (id_slide: %d)', [(int) $id_slide], 'Modules.Awimagestrip.Admin') .
             '</p>';
     }
 
@@ -1082,11 +1087,11 @@ class AwImageStrip extends Module implements WidgetInterface
 
         if (Shop::isFeatureActive()) {
             if (Shop::getContext() == Shop::CONTEXT_SHOP) {
-                $shop_info = $this->trans('The modifications will be applied to shop: %s', [$this->context->shop->name], 'Modules.AwImageStrip.Admin');
+                $shop_info = $this->trans('The modifications will be applied to shop: %s', [$this->context->shop->name], 'Modules.Awimagestrip.Admin');
             } elseif (Shop::getContext() == Shop::CONTEXT_GROUP) {
-                $shop_info = $this->trans('The modifications will be applied to this group: %s', [Shop::getContextShopGroup()->name], 'Modules.AwImageStrip.Admin');
+                $shop_info = $this->trans('The modifications will be applied to this group: %s', [Shop::getContextShopGroup()->name], 'Modules.Awimagestrip.Admin');
             } else {
-                $shop_info = $this->trans('The modifications will be applied to all shops and shop groups', [], 'Modules.AwImageStrip.Admin');
+                $shop_info = $this->trans('The modifications will be applied to all shops and shop groups', [], 'Modules.Awimagestrip.Admin');
             }
 
             return '<div class="alert alert-info">' . $shop_info . '</div>';
@@ -1098,7 +1103,7 @@ class AwImageStrip extends Module implements WidgetInterface
     protected function getSharedSlideWarning()
     {
         return '<p class="alert alert-warning">' .
-            $this->trans('This slide is shared with other shops! All shops associated to this slide will apply modifications made here', [], 'Modules.AwImageStrip.Admin') .
+            $this->trans('This slide is shared with other shops! All shops associated to this slide will apply modifications made here', [], 'Modules.Awimagestrip.Admin') .
             '</p>';
     }
 }

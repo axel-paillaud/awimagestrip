@@ -16,7 +16,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *}
-<div class="panel"><h3><i class="icon-list-ul"></i> {l s='Slides list' d='Modules.AwImageStrip.Admin'}
+<div class="panel"><h3><i class="icon-list-ul"></i> {l s='Slides list' d='Modules.Awimagestrip.Admin'}
 	<span class="panel-heading-action">
 		<a id="desc-product-new" class="list-toolbar-btn" href="{$link->getAdminLink('AdminModules')}&configure=awimagestrip&addSlide=1">
 			<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Add new' d='Admin.Actions'}" data-html="true">
@@ -42,7 +42,7 @@
 								{if $slide.is_shared}
 									<div>
 										<span class="label color_field pull-left" style="background-color:#108510;color:white;margin-top:5px;">
-											{l s='Shared slide' d='Modules.AwImageStrip.Admin'}
+											{l s='Shared slide' d='Modules.Awimagestrip.Admin'}
 										</span>
 									</div>
 								{/if}
