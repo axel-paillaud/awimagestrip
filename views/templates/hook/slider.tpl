@@ -18,10 +18,11 @@
  *}
 
 {if $awimagestrip.slides}
-  <div class="awimagestrip-container" 
-       data-speed="{$awimagestrip.speed|escape:'html':'UTF-8'}" 
-       data-pause-on-hover="{$awimagestrip.pause|escape:'html':'UTF-8'}" 
-       data-wrap="{$awimagestrip.wrap|escape:'html':'UTF-8'}">
+  <div
+    class="awimagestrip-container"
+    data-speed="{$awimagestrip.speed|escape:'html':'UTF-8'}"
+    data-pause-on-hover="{$awimagestrip.pause|escape:'html':'UTF-8'}"
+  >
     <div class="awimagestrip-grid">
       {foreach from=$awimagestrip.slides item=slide}
         <div class="awimagestrip-slide">

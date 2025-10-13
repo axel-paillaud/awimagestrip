@@ -41,7 +41,6 @@ class AwImageStrip extends Module implements WidgetInterface
     protected $_html = '';
     protected $default_speed = 5000;
     protected $default_pause_on_hover = 1;
-    protected $default_wrap = 1;
     protected $templateFile;
     /**
      * @var string
@@ -95,7 +94,6 @@ class AwImageStrip extends Module implements WidgetInterface
                 /* Sets up configuration */
                 $res &= Configuration::updateValue('AWIMAGESTRIP_SPEED', $this->default_speed, false, $shop_group_id, $shop_id);
                 $res &= Configuration::updateValue('AWIMAGESTRIP_PAUSE_ON_HOVER', $this->default_pause_on_hover, false, $shop_group_id, $shop_id);
-                $res &= Configuration::updateValue('AWIMAGESTRIP_WRAP', $this->default_wrap, false, $shop_group_id, $shop_id);
             }
 
             /* Sets up Shop Group configuration */
@@ -103,14 +101,12 @@ class AwImageStrip extends Module implements WidgetInterface
                 foreach ($shop_groups_list as $shop_group_id) {
                     $res &= Configuration::updateValue('AWIMAGESTRIP_SPEED', $this->default_speed, false, $shop_group_id);
                     $res &= Configuration::updateValue('AWIMAGESTRIP_PAUSE_ON_HOVER', $this->default_pause_on_hover, false, $shop_group_id);
-                    $res &= Configuration::updateValue('AWIMAGESTRIP_WRAP', $this->default_wrap, false, $shop_group_id);
                 }
             }
 
             /* Sets up Global configuration */
             $res &= Configuration::updateValue('AWIMAGESTRIP_SPEED', $this->default_speed);
             $res &= Configuration::updateValue('AWIMAGESTRIP_PAUSE_ON_HOVER', $this->default_pause_on_hover);
-            $res &= Configuration::updateValue('AWIMAGESTRIP_WRAP', $this->default_wrap);
 
             /* Creates tables */
             $res &= $this->createTables();
@@ -180,7 +176,6 @@ class AwImageStrip extends Module implements WidgetInterface
             /* Unsets configuration */
             $res &= Configuration::deleteByName('AWIMAGESTRIP_SPEED');
             $res &= Configuration::deleteByName('AWIMAGESTRIP_PAUSE_ON_HOVER');
-            $res &= Configuration::deleteByName('AWIMAGESTRIP_WRAP');
 
             return (bool) $res;
         }
@@ -415,7 +410,6 @@ class AwImageStrip extends Module implements WidgetInterface
 
                 $res &= Configuration::updateValue('AWIMAGESTRIP_SPEED', (int) Tools::getValue('AWIMAGESTRIP_SPEED'), false, $shop_group_id, $shop_id);
                 $res &= Configuration::updateValue('AWIMAGESTRIP_PAUSE_ON_HOVER', (int) Tools::getValue('AWIMAGESTRIP_PAUSE_ON_HOVER'), false, $shop_group_id, $shop_id);
-                $res &= Configuration::updateValue('AWIMAGESTRIP_WRAP', (int) Tools::getValue('AWIMAGESTRIP_WRAP'), false, $shop_group_id, $shop_id);
             }
 
             /* Update global shop context if needed*/
@@ -423,12 +417,10 @@ class AwImageStrip extends Module implements WidgetInterface
                 case Shop::CONTEXT_ALL:
                     $res &= Configuration::updateValue('AWIMAGESTRIP_SPEED', (int) Tools::getValue('AWIMAGESTRIP_SPEED'));
                     $res &= Configuration::updateValue('AWIMAGESTRIP_PAUSE_ON_HOVER', (int) Tools::getValue('AWIMAGESTRIP_PAUSE_ON_HOVER'));
-                    $res &= Configuration::updateValue('AWIMAGESTRIP_WRAP', (int) Tools::getValue('AWIMAGESTRIP_WRAP'));
                     if (count($shop_groups_list)) {
                         foreach ($shop_groups_list as $shop_group_id) {
                             $res &= Configuration::updateValue('AWIMAGESTRIP_SPEED', (int) Tools::getValue('AWIMAGESTRIP_SPEED'), false, $shop_group_id);
                             $res &= Configuration::updateValue('AWIMAGESTRIP_PAUSE_ON_HOVER', (int) Tools::getValue('AWIMAGESTRIP_PAUSE_ON_HOVER'), false, $shop_group_id);
-                            $res &= Configuration::updateValue('AWIMAGESTRIP_WRAP', (int) Tools::getValue('AWIMAGESTRIP_WRAP'), false, $shop_group_id);
                         }
                     }
                     break;
@@ -437,7 +429,6 @@ class AwImageStrip extends Module implements WidgetInterface
                         foreach ($shop_groups_list as $shop_group_id) {
                             $res &= Configuration::updateValue('AWIMAGESTRIP_SPEED', (int) Tools::getValue('AWIMAGESTRIP_SPEED'), false, $shop_group_id);
                             $res &= Configuration::updateValue('AWIMAGESTRIP_PAUSE_ON_HOVER', (int) Tools::getValue('AWIMAGESTRIP_PAUSE_ON_HOVER'), false, $shop_group_id);
-                            $res &= Configuration::updateValue('AWIMAGESTRIP_WRAP', (int) Tools::getValue('AWIMAGESTRIP_WRAP'), false, $shop_group_id);
                         }
                     }
                     break;
@@ -597,7 +588,6 @@ class AwImageStrip extends Module implements WidgetInterface
             'awimagestrip' => [
                 'speed' => $config['AWIMAGESTRIP_SPEED'],
                 'pause' => $config['AWIMAGESTRIP_PAUSE_ON_HOVER'] ? 'hover' : '',
-                'wrap' => $config['AWIMAGESTRIP_WRAP'] ? 'true' : 'false',
                 'slides' => $slides,
             ],
         ];
@@ -968,24 +958,6 @@ class AwImageStrip extends Module implements WidgetInterface
                             ],
                         ],
                     ],
-                    [
-                        'type' => 'switch',
-                        'label' => $this->trans('Loop forever', [], 'Modules.AwImageStrip.Admin'),
-                        'name' => 'AWIMAGESTRIP_WRAP',
-                        'desc' => $this->trans('Loop or stop after the last slide.', [], 'Modules.AwImageStrip.Admin'),
-                        'values' => [
-                            [
-                                'id' => 'active_on',
-                                'value' => 1,
-                                'label' => $this->trans('Yes', [], 'Admin.Global'),
-                            ],
-                            [
-                                'id' => 'active_off',
-                                'value' => 0,
-                                'label' => $this->trans('No', [], 'Admin.Global'),
-                            ],
-                        ],
-                    ],
                 ],
                 'submit' => [
                     'title' => $this->trans('Save', [], 'Admin.Actions'),
@@ -1020,7 +992,6 @@ class AwImageStrip extends Module implements WidgetInterface
         return [
             'AWIMAGESTRIP_SPEED' => Tools::getValue('AWIMAGESTRIP_SPEED', Configuration::get('AWIMAGESTRIP_SPEED', null, $id_shop_group, $id_shop)),
             'AWIMAGESTRIP_PAUSE_ON_HOVER' => Tools::getValue('AWIMAGESTRIP_PAUSE_ON_HOVER', Configuration::get('AWIMAGESTRIP_PAUSE_ON_HOVER', null, $id_shop_group, $id_shop)),
-            'AWIMAGESTRIP_WRAP' => Tools::getValue('AWIMAGESTRIP_WRAP', Configuration::get('AWIMAGESTRIP_WRAP', null, $id_shop_group, $id_shop)),
         ];
     }
 
