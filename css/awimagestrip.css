@@ -37,21 +37,22 @@
 
 .awimagestrip-slide {
   position: relative;
-  width: 640px;
   overflow: hidden;
+  display: grid;
 }
 
 .awimagestrip-link {
-  display: block;
+  display: grid;
   text-decoration: none;
   color: inherit;
 }
 
 .awimagestrip-image {
-  width: 640px;
-  height: auto;
+  width: 100%;
+  height: 100%;
   display: block;
   object-fit: cover;
+  object-position: center;
   transition: transform 0.3s ease;
 }
 
@@ -139,13 +140,5 @@
   .awimagestrip-grid {
     grid-template-columns: repeat(3, 1fr);
     max-width: 100%;
-  }
-
-  .awimagestrip-slide {
-    width: 100%;
-  }
-
-  .awimagestrip-image {
-    width: 100%;
   }
 }
