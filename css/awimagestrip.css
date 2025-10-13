@@ -18,39 +18,44 @@
  */
 
 /* ============================================
-   DESKTOP : 3 images côte à côte (Grid)
+   DESKTOP: 3 horizontal portrait images
+   max-width: 1920px, each image: 640px
    ============================================ */
 
-.awimagestripawimagestrip-container {
+.awimagestrip-container {
   width: 100%;
-  margin-bottom: 2rem;
+  max-width: 1920px;
+  margin: 0 auto 2rem;
 }
 
-.awimagestripawimagestrip-grid {
+.awimagestrip-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(3, 640px);
+  justify-content: center;
+  gap: 0;
 }
 
 .awimagestrip-slide {
   position: relative;
+  width: 640px;
   overflow: hidden;
 }
 
-.awimagestripawimagestrip-link {
+.awimagestrip-link {
   display: block;
   text-decoration: none;
   color: inherit;
 }
 
-.awimagestrip_navawimagestrip-image {
-  width: 100%;
+.awimagestrip-image {
+  width: 640px;
   height: auto;
   display: block;
+  object-fit: cover;
   transition: transform 0.3s ease;
 }
 
-.awimagestrip_navawimagestrip-link:hover .awimagestrip-image {
+.awimagestrip-link:hover .awimagestrip-image {
   transform: scale(1.05);
 }
 
@@ -83,10 +88,14 @@
 }
 
 /* ============================================
-   MOBILE : Slider horizontal avec scroll-snap
+   MOBILE: Horizontal slider with scroll-snap
    ============================================ */
 
 @media (max-width: 768px) {
+  .awimagestrip-container {
+    max-width: 100%;
+  }
+
   .awimagestrip-grid {
     display: flex;
     overflow-x: auto;
@@ -103,7 +112,12 @@
 
   .awimagestrip-slide {
     flex: 0 0 100%;
+    width: 100%;
     scroll-snap-align: start;
+  }
+
+  .awimagestrip-image {
+    width: 100%;
   }
 
   .awimagestrip-caption {
@@ -117,9 +131,21 @@
   }
 }
 
-/* Tablette : 2 colonnes */
-@media (min-width: 769px) and (max-width: 1024px) {
+/* ============================================
+   TABLET: Responsive between mobile and desktop
+   ============================================ */
+
+@media (min-width: 769px) and (max-width: 1919px) {
   .awimagestrip-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 100%;
+  }
+
+  .awimagestrip-slide {
+    width: 100%;
+  }
+
+  .awimagestrip-image {
+    width: 100%;
   }
 }
