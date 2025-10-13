@@ -16,14 +16,14 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-.homeslider-container {
+.awimagestrip-container {
   margin-bottom: 50px;
   position: relative;
   float: left;
   width: 100%;
 }
 
-.homeslider {
+.awimagestrip {
   position: relative;
   list-style: none;
   overflow: hidden;
@@ -32,14 +32,14 @@
   margin: 0;
 }
 
-.homeslider li {
+.awimagestrip li {
   position: absolute;
   width: 100%;
   left: 0;
   top: 0;
 }
 
-.homeslider img {
+.awimagestrip img {
   display: block;
   position: relative;
   z-index: 1;
@@ -48,7 +48,7 @@
   border: 0;
 }
 
-.homeslider .caption {
+.awimagestrip .caption {
   display: block;
   position: absolute;
   z-index: 2;
@@ -65,7 +65,7 @@
   max-width: none;
 }
 
-.homeslider_nav {
+.awimagestrip_nav {
   position: absolute;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   top: 52%;
@@ -81,11 +81,11 @@
   margin-top: -45px;
 }
 
-.homeslider_nav:active {
+.awimagestrip_nav:active {
   opacity: 1.0;
 }
 
-.homeslider_nav.next {
+.awimagestrip_nav.next {
   left: auto;
   background-position: right top;
   right: 0;

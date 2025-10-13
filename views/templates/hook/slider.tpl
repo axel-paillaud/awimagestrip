@@ -17,10 +17,10 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *}
 
-{if $homeslider.slides}
-  <div class="homeslider-container" data-interval="{$homeslider.speed}" data-wrap="{$homeslider.wrap}" data-pause="{$homeslider.pause}">
+{if $awimagestrip.slides}
+  <div class="awimagestrip-container" data-interval="{$awimagestrip.speed}" data-wrap="{$awimagestrip.wrap}" data-pause="{$awimagestrip.pause}">
     <ul class="rslides">
-      {foreach from=$homeslider.slides item=slide}
+      {foreach from=$awimagestrip.slides item=slide}
         <li class="slide">
           {if !empty($slide.url)}<a href="{$slide.url}">{/if}
             <img src="{$slide.image_url}" alt="{$slide.legend|escape}" />

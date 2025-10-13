@@ -32,8 +32,8 @@ class AwImageStrip extends ObjectModel
      * @see ObjectModel::$definition
      */
     public static $definition = [
-        'table' => 'homeslider_slides',
-        'primary' => 'id_homeslider_slides',
+        'table' => 'awimagestrip_slides',
+        'primary' => 'id_awimagestrip_slides',
         'multilang' => true,
         'fields' => [
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
@@ -55,7 +55,7 @@ class AwImageStrip extends ObjectModel
 
         $res = parent::add($autodate, $null_values);
         $res &= Db::getInstance()->execute('
-			INSERT INTO `' . _DB_PREFIX_ . 'homeslider` (`id_shop`, `id_homeslider_slides`)
+			INSERT INTO `' . _DB_PREFIX_ . 'awimagestrip` (`id_shop`, `id_awimagestrip_slides`)
 			VALUES(' . (int) $id_shop . ', ' . (int) $this->id . ')'
         );
 
@@ -78,8 +78,8 @@ class AwImageStrip extends ObjectModel
         $res &= $this->reOrderPositions();
 
         $res &= Db::getInstance()->execute('
-			DELETE FROM `' . _DB_PREFIX_ . 'homeslider`
-			WHERE `id_homeslider_slides` = ' . (int) $this->id
+			DELETE FROM `' . _DB_PREFIX_ . 'awimagestrip`
+			WHERE `id_awimagestrip_slides` = ' . (int) $this->id
         );
 
         $res &= parent::delete();
@@ -95,8 +95,8 @@ class AwImageStrip extends ObjectModel
 
         $max = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS('
 			SELECT MAX(hss.`position`) as position
-			FROM `' . _DB_PREFIX_ . 'homeslider_slides` hss, `' . _DB_PREFIX_ . 'homeslider` hs
-			WHERE hss.`id_homeslider_slides` = hs.`id_homeslider_slides` AND hs.`id_shop` = ' . (int) $id_shop
+			FROM `' . _DB_PREFIX_ . 'awimagestrip_slides` hss, `' . _DB_PREFIX_ . 'awimagestrip` hs
+			WHERE hss.`id_awimagestrip_slides` = hs.`id_awimagestrip_slides` AND hs.`id_shop` = ' . (int) $id_shop
         );
 
         if ((int) $max == (int) $id_slide) {
@@ -104,9 +104,9 @@ class AwImageStrip extends ObjectModel
         }
 
         $rows = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS('
-			SELECT hss.`position` as position, hss.`id_homeslider_slides` as id_slide
-			FROM `' . _DB_PREFIX_ . 'homeslider_slides` hss
-			LEFT JOIN `' . _DB_PREFIX_ . 'homeslider` hs ON (hss.`id_homeslider_slides` = hs.`id_homeslider_slides`)
+			SELECT hss.`position` as position, hss.`id_awimagestrip_slides` as id_slide
+			FROM `' . _DB_PREFIX_ . 'awimagestrip_slides` hss
+			LEFT JOIN `' . _DB_PREFIX_ . 'awimagestrip` hs ON (hss.`id_awimagestrip_slides` = hs.`id_awimagestrip_slides`)
 			WHERE hs.`id_shop` = ' . (int) $id_shop . ' AND hss.`position` > ' . (int) $this->position
         );
 
@@ -124,8 +124,8 @@ class AwImageStrip extends ObjectModel
     {
         $result = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS('
 			SELECT hs.`id_shop`
-			FROM `' . _DB_PREFIX_ . 'homeslider` hs
-			WHERE hs.`id_homeslider_slides` = ' . (int) $id_slide
+			FROM `' . _DB_PREFIX_ . 'awimagestrip` hs
+			WHERE hs.`id_awimagestrip_slides` = ' . (int) $id_slide
         );
 
         if (!is_array($result)) {

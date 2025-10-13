@@ -32,8 +32,8 @@ class AdminConfigureSlidesController extends ModuleAdminController
         $slides = Tools::getValue('slides');
         foreach ($slides as $position => $id_slide) {
             Db::getInstance()->execute('
-					UPDATE `' . _DB_PREFIX_ . 'homeslider_slides` SET `position` = ' . (int) $position . '
-					WHERE `id_homeslider_slides` = ' . (int) $id_slide
+					UPDATE `' . _DB_PREFIX_ . 'awimagestrip_slides` SET `position` = ' . (int) $position . '
+					WHERE `id_awimagestrip_slides` = ' . (int) $id_slide
                 );
         }
 

@@ -93,24 +93,24 @@ class AwImageStrip extends Module implements WidgetInterface
                 }
 
                 /* Sets up configuration */
-                $res &= Configuration::updateValue('HOMESLIDER_SPEED', $this->default_speed, false, $shop_group_id, $shop_id);
-                $res &= Configuration::updateValue('HOMESLIDER_PAUSE_ON_HOVER', $this->default_pause_on_hover, false, $shop_group_id, $shop_id);
-                $res &= Configuration::updateValue('HOMESLIDER_WRAP', $this->default_wrap, false, $shop_group_id, $shop_id);
+                $res &= Configuration::updateValue('AWIMAGESTRIP_SPEED', $this->default_speed, false, $shop_group_id, $shop_id);
+                $res &= Configuration::updateValue('AWIMAGESTRIP_PAUSE_ON_HOVER', $this->default_pause_on_hover, false, $shop_group_id, $shop_id);
+                $res &= Configuration::updateValue('AWIMAGESTRIP_WRAP', $this->default_wrap, false, $shop_group_id, $shop_id);
             }
 
             /* Sets up Shop Group configuration */
             if (count($shop_groups_list)) {
                 foreach ($shop_groups_list as $shop_group_id) {
-                    $res &= Configuration::updateValue('HOMESLIDER_SPEED', $this->default_speed, false, $shop_group_id);
-                    $res &= Configuration::updateValue('HOMESLIDER_PAUSE_ON_HOVER', $this->default_pause_on_hover, false, $shop_group_id);
-                    $res &= Configuration::updateValue('HOMESLIDER_WRAP', $this->default_wrap, false, $shop_group_id);
+                    $res &= Configuration::updateValue('AWIMAGESTRIP_SPEED', $this->default_speed, false, $shop_group_id);
+                    $res &= Configuration::updateValue('AWIMAGESTRIP_PAUSE_ON_HOVER', $this->default_pause_on_hover, false, $shop_group_id);
+                    $res &= Configuration::updateValue('AWIMAGESTRIP_WRAP', $this->default_wrap, false, $shop_group_id);
                 }
             }
 
             /* Sets up Global configuration */
-            $res &= Configuration::updateValue('HOMESLIDER_SPEED', $this->default_speed);
-            $res &= Configuration::updateValue('HOMESLIDER_PAUSE_ON_HOVER', $this->default_pause_on_hover);
-            $res &= Configuration::updateValue('HOMESLIDER_WRAP', $this->default_wrap);
+            $res &= Configuration::updateValue('AWIMAGESTRIP_SPEED', $this->default_speed);
+            $res &= Configuration::updateValue('AWIMAGESTRIP_PAUSE_ON_HOVER', $this->default_pause_on_hover);
+            $res &= Configuration::updateValue('AWIMAGESTRIP_WRAP', $this->default_wrap);
 
             /* Creates tables */
             $res &= $this->createTables();
@@ -178,9 +178,9 @@ class AwImageStrip extends Module implements WidgetInterface
             $res &= $this->uninstallTab();
 
             /* Unsets configuration */
-            $res &= Configuration::deleteByName('HOMESLIDER_SPEED');
-            $res &= Configuration::deleteByName('HOMESLIDER_PAUSE_ON_HOVER');
-            $res &= Configuration::deleteByName('HOMESLIDER_WRAP');
+            $res &= Configuration::deleteByName('AWIMAGESTRIP_SPEED');
+            $res &= Configuration::deleteByName('AWIMAGESTRIP_PAUSE_ON_HOVER');
+            $res &= Configuration::deleteByName('AWIMAGESTRIP_WRAP');
 
             return (bool) $res;
         }
@@ -207,34 +207,34 @@ class AwImageStrip extends Module implements WidgetInterface
     {
         /* Slides */
         $res = (bool) Db::getInstance()->execute('
-            CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'homeslider` (
-                `id_homeslider_slides` int(10) unsigned NOT NULL AUTO_INCREMENT,
+            CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'awimagestrip` (
+                `id_awimagestrip_slides` int(10) unsigned NOT NULL AUTO_INCREMENT,
                 `id_shop` int(10) unsigned NOT NULL,
-                PRIMARY KEY (`id_homeslider_slides`, `id_shop`)
+                PRIMARY KEY (`id_awimagestrip_slides`, `id_shop`)
             ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=UTF8;
         ');
 
         /* Slides configuration */
         $res &= Db::getInstance()->execute('
-            CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'homeslider_slides` (
-              `id_homeslider_slides` int(10) unsigned NOT NULL AUTO_INCREMENT,
+            CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'awimagestrip_slides` (
+              `id_awimagestrip_slides` int(10) unsigned NOT NULL AUTO_INCREMENT,
               `position` int(10) unsigned NOT NULL DEFAULT \'0\',
               `active` tinyint(1) unsigned NOT NULL DEFAULT \'0\',
-              PRIMARY KEY (`id_homeslider_slides`)
+              PRIMARY KEY (`id_awimagestrip_slides`)
             ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=UTF8;
         ');
 
         /* Slides lang configuration */
         $res &= Db::getInstance()->execute('
-            CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'homeslider_slides_lang` (
-              `id_homeslider_slides` int(10) unsigned NOT NULL,
+            CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'awimagestrip_slides_lang` (
+              `id_awimagestrip_slides` int(10) unsigned NOT NULL,
               `id_lang` int(10) unsigned NOT NULL,
               `title` varchar(255) NOT NULL,
               `description` text NOT NULL,
               `legend` varchar(255) NOT NULL,
               `url` varchar(255) NOT NULL,
               `image` varchar(255) NOT NULL,
-              PRIMARY KEY (`id_homeslider_slides`,`id_lang`)
+              PRIMARY KEY (`id_awimagestrip_slides`,`id_lang`)
             ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=UTF8;
         ');
 
@@ -253,7 +253,7 @@ class AwImageStrip extends Module implements WidgetInterface
         }
 
         return Db::getInstance()->execute('
-            DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'homeslider`, `' . _DB_PREFIX_ . 'homeslider_slides`, `' . _DB_PREFIX_ . 'homeslider_slides_lang`;
+            DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'awimagestrip`, `' . _DB_PREFIX_ . 'awimagestrip_slides`, `' . _DB_PREFIX_ . 'awimagestrip_slides_lang`;
         ');
     }
 
@@ -327,7 +327,7 @@ class AwImageStrip extends Module implements WidgetInterface
 
         /* Validation for Slider configuration */
         if (Tools::isSubmit('submitSlider')) {
-            if (!Validate::isInt(Tools::getValue('HOMESLIDER_SPEED'))) {
+            if (!Validate::isInt(Tools::getValue('AWIMAGESTRIP_SPEED'))) {
                 $errors[] = $this->trans('Invalid values', [], 'Modules.AwImageStrip.Admin');
             }
         } elseif (Tools::isSubmit('changeStatus')) {
@@ -413,31 +413,31 @@ class AwImageStrip extends Module implements WidgetInterface
                     $shop_groups_list[] = $shop_group_id;
                 }
 
-                $res &= Configuration::updateValue('HOMESLIDER_SPEED', (int) Tools::getValue('HOMESLIDER_SPEED'), false, $shop_group_id, $shop_id);
-                $res &= Configuration::updateValue('HOMESLIDER_PAUSE_ON_HOVER', (int) Tools::getValue('HOMESLIDER_PAUSE_ON_HOVER'), false, $shop_group_id, $shop_id);
-                $res &= Configuration::updateValue('HOMESLIDER_WRAP', (int) Tools::getValue('HOMESLIDER_WRAP'), false, $shop_group_id, $shop_id);
+                $res &= Configuration::updateValue('AWIMAGESTRIP_SPEED', (int) Tools::getValue('AWIMAGESTRIP_SPEED'), false, $shop_group_id, $shop_id);
+                $res &= Configuration::updateValue('AWIMAGESTRIP_PAUSE_ON_HOVER', (int) Tools::getValue('AWIMAGESTRIP_PAUSE_ON_HOVER'), false, $shop_group_id, $shop_id);
+                $res &= Configuration::updateValue('AWIMAGESTRIP_WRAP', (int) Tools::getValue('AWIMAGESTRIP_WRAP'), false, $shop_group_id, $shop_id);
             }
 
             /* Update global shop context if needed*/
             switch ($shop_context) {
                 case Shop::CONTEXT_ALL:
-                    $res &= Configuration::updateValue('HOMESLIDER_SPEED', (int) Tools::getValue('HOMESLIDER_SPEED'));
-                    $res &= Configuration::updateValue('HOMESLIDER_PAUSE_ON_HOVER', (int) Tools::getValue('HOMESLIDER_PAUSE_ON_HOVER'));
-                    $res &= Configuration::updateValue('HOMESLIDER_WRAP', (int) Tools::getValue('HOMESLIDER_WRAP'));
+                    $res &= Configuration::updateValue('AWIMAGESTRIP_SPEED', (int) Tools::getValue('AWIMAGESTRIP_SPEED'));
+                    $res &= Configuration::updateValue('AWIMAGESTRIP_PAUSE_ON_HOVER', (int) Tools::getValue('AWIMAGESTRIP_PAUSE_ON_HOVER'));
+                    $res &= Configuration::updateValue('AWIMAGESTRIP_WRAP', (int) Tools::getValue('AWIMAGESTRIP_WRAP'));
                     if (count($shop_groups_list)) {
                         foreach ($shop_groups_list as $shop_group_id) {
-                            $res &= Configuration::updateValue('HOMESLIDER_SPEED', (int) Tools::getValue('HOMESLIDER_SPEED'), false, $shop_group_id);
-                            $res &= Configuration::updateValue('HOMESLIDER_PAUSE_ON_HOVER', (int) Tools::getValue('HOMESLIDER_PAUSE_ON_HOVER'), false, $shop_group_id);
-                            $res &= Configuration::updateValue('HOMESLIDER_WRAP', (int) Tools::getValue('HOMESLIDER_WRAP'), false, $shop_group_id);
+                            $res &= Configuration::updateValue('AWIMAGESTRIP_SPEED', (int) Tools::getValue('AWIMAGESTRIP_SPEED'), false, $shop_group_id);
+                            $res &= Configuration::updateValue('AWIMAGESTRIP_PAUSE_ON_HOVER', (int) Tools::getValue('AWIMAGESTRIP_PAUSE_ON_HOVER'), false, $shop_group_id);
+                            $res &= Configuration::updateValue('AWIMAGESTRIP_WRAP', (int) Tools::getValue('AWIMAGESTRIP_WRAP'), false, $shop_group_id);
                         }
                     }
                     break;
                 case Shop::CONTEXT_GROUP:
                     if (count($shop_groups_list)) {
                         foreach ($shop_groups_list as $shop_group_id) {
-                            $res &= Configuration::updateValue('HOMESLIDER_SPEED', (int) Tools::getValue('HOMESLIDER_SPEED'), false, $shop_group_id);
-                            $res &= Configuration::updateValue('HOMESLIDER_PAUSE_ON_HOVER', (int) Tools::getValue('HOMESLIDER_PAUSE_ON_HOVER'), false, $shop_group_id);
-                            $res &= Configuration::updateValue('HOMESLIDER_WRAP', (int) Tools::getValue('HOMESLIDER_WRAP'), false, $shop_group_id);
+                            $res &= Configuration::updateValue('AWIMAGESTRIP_SPEED', (int) Tools::getValue('AWIMAGESTRIP_SPEED'), false, $shop_group_id);
+                            $res &= Configuration::updateValue('AWIMAGESTRIP_PAUSE_ON_HOVER', (int) Tools::getValue('AWIMAGESTRIP_PAUSE_ON_HOVER'), false, $shop_group_id);
+                            $res &= Configuration::updateValue('AWIMAGESTRIP_WRAP', (int) Tools::getValue('AWIMAGESTRIP_WRAP'), false, $shop_group_id);
                         }
                     }
                     break;
@@ -566,9 +566,9 @@ class AwImageStrip extends Module implements WidgetInterface
 
     public function hookdisplayHeader($params)
     {
-        $this->context->controller->registerStylesheet('modules-homeslider', 'modules/' . $this->name . '/css/homeslider.css', ['media' => 'all', 'priority' => 150]);
+        $this->context->controller->registerStylesheet('modules-awimagestrip', 'modules/' . $this->name . '/css/awimagestrip.css', ['media' => 'all', 'priority' => 150]);
         $this->context->controller->registerJavascript('modules-responsiveslides', 'modules/' . $this->name . '/js/responsiveslides.min.js', ['position' => 'bottom', 'priority' => 150]);
-        $this->context->controller->registerJavascript('modules-homeslider', 'modules/' . $this->name . '/js/homeslider.js', ['position' => 'bottom', 'priority' => 150]);
+        $this->context->controller->registerJavascript('modules-awimagestrip', 'modules/' . $this->name . '/js/awimagestrip.js', ['position' => 'bottom', 'priority' => 150]);
     }
 
     public function renderWidget($hookName = null, array $configuration = [])
@@ -595,10 +595,10 @@ class AwImageStrip extends Module implements WidgetInterface
         $config = $this->getConfigFieldsValues();
 
         return [
-            'homeslider' => [
-                'speed' => $config['HOMESLIDER_SPEED'],
-                'pause' => $config['HOMESLIDER_PAUSE_ON_HOVER'] ? 'hover' : '',
-                'wrap' => $config['HOMESLIDER_WRAP'] ? 'true' : 'false',
+            'awimagestrip' => [
+                'speed' => $config['AWIMAGESTRIP_SPEED'],
+                'pause' => $config['AWIMAGESTRIP_PAUSE_ON_HOVER'] ? 'hover' : '',
+                'wrap' => $config['AWIMAGESTRIP_WRAP'] ? 'true' : 'false',
                 'slides' => $slides,
             ],
         ];
@@ -635,9 +635,9 @@ class AwImageStrip extends Module implements WidgetInterface
     public function hookActionShopDataDuplication($params)
     {
         Db::getInstance()->execute(
-            'INSERT IGNORE INTO ' . _DB_PREFIX_ . 'homeslider (id_homeslider_slides, id_shop)
-            SELECT id_homeslider_slides, ' . (int) $params['new_id_shop'] . '
-            FROM ' . _DB_PREFIX_ . 'homeslider
+            'INSERT IGNORE INTO ' . _DB_PREFIX_ . 'awimagestrip (id_awimagestrip_slides, id_shop)
+            SELECT id_awimagestrip_slides, ' . (int) $params['new_id_shop'] . '
+            FROM ' . _DB_PREFIX_ . 'awimagestrip
             WHERE id_shop = ' . (int) $params['old_id_shop']
         );
         $this->clearCache();
@@ -700,8 +700,8 @@ class AwImageStrip extends Module implements WidgetInterface
     {
         $row = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getRow(
             'SELECT MAX(hss.`position`) AS `next_position`
-            FROM `' . _DB_PREFIX_ . 'homeslider_slides` hss, `' . _DB_PREFIX_ . 'homeslider` hs
-            WHERE hss.`id_homeslider_slides` = hs.`id_homeslider_slides` AND hs.`id_shop` = ' . (int) $this->context->shop->id
+            FROM `' . _DB_PREFIX_ . 'awimagestrip_slides` hss, `' . _DB_PREFIX_ . 'awimagestrip` hs
+            WHERE hss.`id_awimagestrip_slides` = hs.`id_awimagestrip_slides` AND hs.`id_shop` = ' . (int) $this->context->shop->id
         );
 
         return ++$row['next_position'];
@@ -722,11 +722,11 @@ class AwImageStrip extends Module implements WidgetInterface
         $id_lang = $this->context->language->id;
 
         $slides = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT hs.`id_homeslider_slides` as id_slide, hss.`position`, hss.`active`, hssl.`title`,
+            'SELECT hs.`id_awimagestrip_slides` as id_slide, hss.`position`, hss.`active`, hssl.`title`,
             hssl.`url`, hssl.`legend`, hssl.`description`, hssl.`image`
-            FROM ' . _DB_PREFIX_ . 'homeslider hs
-            LEFT JOIN ' . _DB_PREFIX_ . 'homeslider_slides hss ON (hs.id_homeslider_slides = hss.id_homeslider_slides)
-            LEFT JOIN ' . _DB_PREFIX_ . 'homeslider_slides_lang hssl ON (hss.id_homeslider_slides = hssl.id_homeslider_slides)
+            FROM ' . _DB_PREFIX_ . 'awimagestrip hs
+            LEFT JOIN ' . _DB_PREFIX_ . 'awimagestrip_slides hss ON (hs.id_awimagestrip_slides = hss.id_awimagestrip_slides)
+            LEFT JOIN ' . _DB_PREFIX_ . 'awimagestrip_slides_lang hssl ON (hss.id_awimagestrip_slides = hssl.id_awimagestrip_slides)
             WHERE id_shop = ' . (int) $id_shop . '
             AND hssl.id_lang = ' . (int) $id_lang .
             ($forceShowAll ? '' : ' AND hssl.`image` <> ""') .
@@ -753,10 +753,10 @@ class AwImageStrip extends Module implements WidgetInterface
 
         $results = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS(
             'SELECT hssl.`image`, hssl.`id_lang`
-            FROM ' . _DB_PREFIX_ . 'homeslider hs
-            LEFT JOIN ' . _DB_PREFIX_ . 'homeslider_slides hss ON (hs.id_homeslider_slides = hss.id_homeslider_slides)
-            LEFT JOIN ' . _DB_PREFIX_ . 'homeslider_slides_lang hssl ON (hss.id_homeslider_slides = hssl.id_homeslider_slides)
-            WHERE hs.`id_homeslider_slides` = ' . (int) $id_slides . ' AND hs.`id_shop` = ' . (int) $id_shop .
+            FROM ' . _DB_PREFIX_ . 'awimagestrip hs
+            LEFT JOIN ' . _DB_PREFIX_ . 'awimagestrip_slides hss ON (hs.id_awimagestrip_slides = hss.id_awimagestrip_slides)
+            LEFT JOIN ' . _DB_PREFIX_ . 'awimagestrip_slides_lang hssl ON (hss.id_awimagestrip_slides = hssl.id_awimagestrip_slides)
+            WHERE hs.`id_awimagestrip_slides` = ' . (int) $id_slides . ' AND hs.`id_shop` = ' . (int) $id_shop .
             ($active ? ' AND hss.`active` = 1' : ' ')
         );
 
@@ -782,9 +782,9 @@ class AwImageStrip extends Module implements WidgetInterface
 
     public function slideExists($id_slide)
     {
-        $req = 'SELECT hs.`id_homeslider_slides` as id_slide
-                FROM `' . _DB_PREFIX_ . 'homeslider` hs
-                WHERE hs.`id_homeslider_slides` = ' . (int) $id_slide;
+        $req = 'SELECT hs.`id_awimagestrip_slides` as id_slide
+                FROM `' . _DB_PREFIX_ . 'awimagestrip` hs
+                WHERE hs.`id_awimagestrip_slides` = ' . (int) $id_slide;
         $row = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getRow($req);
 
         return $row;
@@ -946,7 +946,7 @@ class AwImageStrip extends Module implements WidgetInterface
                     [
                         'type' => 'text',
                         'label' => $this->trans('Speed', [], 'Modules.AwImageStrip.Admin'),
-                        'name' => 'HOMESLIDER_SPEED',
+                        'name' => 'AWIMAGESTRIP_SPEED',
                         'suffix' => 'milliseconds',
                         'class' => 'fixed-width-sm',
                         'desc' => $this->trans('The duration of the transition between two slides.', [], 'Modules.AwImageStrip.Admin'),
@@ -954,7 +954,7 @@ class AwImageStrip extends Module implements WidgetInterface
                     [
                         'type' => 'switch',
                         'label' => $this->trans('Pause on hover', [], 'Modules.AwImageStrip.Admin'),
-                        'name' => 'HOMESLIDER_PAUSE_ON_HOVER',
+                        'name' => 'AWIMAGESTRIP_PAUSE_ON_HOVER',
                         'desc' => $this->trans('Stop sliding when the mouse cursor is over the slideshow.', [], 'Modules.AwImageStrip.Admin'),
                         'values' => [
                             [
@@ -972,7 +972,7 @@ class AwImageStrip extends Module implements WidgetInterface
                     [
                         'type' => 'switch',
                         'label' => $this->trans('Loop forever', [], 'Modules.AwImageStrip.Admin'),
-                        'name' => 'HOMESLIDER_WRAP',
+                        'name' => 'AWIMAGESTRIP_WRAP',
                         'desc' => $this->trans('Loop or stop after the last slide.', [], 'Modules.AwImageStrip.Admin'),
                         'values' => [
                             [
@@ -1019,9 +1019,9 @@ class AwImageStrip extends Module implements WidgetInterface
         $id_shop = Shop::getContextShopID();
 
         return [
-            'HOMESLIDER_SPEED' => Tools::getValue('HOMESLIDER_SPEED', Configuration::get('HOMESLIDER_SPEED', null, $id_shop_group, $id_shop)),
-            'HOMESLIDER_PAUSE_ON_HOVER' => Tools::getValue('HOMESLIDER_PAUSE_ON_HOVER', Configuration::get('HOMESLIDER_PAUSE_ON_HOVER', null, $id_shop_group, $id_shop)),
-            'HOMESLIDER_WRAP' => Tools::getValue('HOMESLIDER_WRAP', Configuration::get('HOMESLIDER_WRAP', null, $id_shop_group, $id_shop)),
+            'AWIMAGESTRIP_SPEED' => Tools::getValue('AWIMAGESTRIP_SPEED', Configuration::get('AWIMAGESTRIP_SPEED', null, $id_shop_group, $id_shop)),
+            'AWIMAGESTRIP_PAUSE_ON_HOVER' => Tools::getValue('AWIMAGESTRIP_PAUSE_ON_HOVER', Configuration::get('AWIMAGESTRIP_PAUSE_ON_HOVER', null, $id_shop_group, $id_shop)),
+            'AWIMAGESTRIP_WRAP' => Tools::getValue('AWIMAGESTRIP_WRAP', Configuration::get('AWIMAGESTRIP_WRAP', null, $id_shop_group, $id_shop)),
         ];
     }
 
