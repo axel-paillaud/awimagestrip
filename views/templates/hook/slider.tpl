@@ -24,14 +24,18 @@
         <div class="awimagestrip-slide">
           {if !empty($slide.url)}<a href="{$slide.url}" class="awimagestrip-link">{/if}
             <img src="{$slide.image_url}" alt="{$slide.legend|escape}" class="awimagestrip-image" width="640" height="853" loading="lazy" />
-            {if $slide.title}
-              <div class="awimagestrip-title-box">
-                <h2 class="awimagestrip-title">{$slide.title}</h2>
-              </div>
-            {/if}
-            {if $slide.description}
-              <div class="awimagestrip-description-box">
-                <div class="awimagestrip-description">{$slide.description nofilter}</div>
+            {if $slide.title || $slide.description}
+              <div class="awimagestrip-caption-wrapper">
+                {if $slide.title}
+                  <div class="awimagestrip-title-box">
+                    <h2 class="awimagestrip-title">{$slide.title}</h2>
+                  </div>
+                {/if}
+                {if $slide.description}
+                  <div class="awimagestrip-description-box">
+                    <div class="awimagestrip-description">{$slide.description nofilter}</div>
+                  </div>
+                {/if}
               </div>
             {/if}
           {if !empty($slide.url)}</a>{/if}
