@@ -1028,7 +1028,7 @@ class AwImageStrip extends Module implements WidgetInterface
         $fields = [];
 
         if (Tools::isSubmit('id_slide') && $this->slideExists((int) Tools::getValue('id_slide'))) {
-            $slide = new AwImageStrip((int) Tools::getValue('id_slide'));
+            $slide = new AwImageStripSlide((int) Tools::getValue('id_slide'));
             $fields['id_slide'] = (int) Tools::getValue('id_slide', $slide->id);
         } else {
             $slide = new AwImageStripSlide();
