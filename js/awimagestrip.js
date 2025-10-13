@@ -17,19 +17,5 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-jQuery(document).ready(function ($) {
-  var awimagestripConfig = {
-    speed: 500,            // Integer: Speed of the transition, in milliseconds
-    timeout: $('.awimagestrip-container').data('interval'), // Integer: Time between slide transitions, in milliseconds
-    nav: true,             // Boolean: Show navigation, true or false
-    random: false,          // Boolean: Randomize the order of the slides, true or false
-    pause: $('.awimagestrip-container').data('pause'), // Boolean: Pause on hover, true or false
-    maxwidth: "",           // Integer: Max-width of the slideshow, in pixels
-    namespace: "awimagestrip",   // String: Change the default namespace used
-    before: function(){},   // Function: Before callback
-    after: function(){}     // Function: After callback
-  };
-
-  $(".rslides").responsiveSlides(awimagestripConfig);
-
-});
+// AwImageStrip - Custom JavaScript (if needed in the future)
+// Currently using pure CSS for desktop grid and mobile scroll-snap
