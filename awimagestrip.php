@@ -504,9 +504,10 @@ class AwImageStrip extends Module implements WidgetInterface
                             'gif',
                             'jpeg',
                             'png',
+                            'webp',
                         ]
                     ) &&
-                    in_array($type, ['jpg', 'gif', 'jpeg', 'png'])
+                    in_array($type, ['jpg', 'gif', 'jpeg', 'png', 'webp'])
                 ) {
                     $temp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
                     $salt = sha1(microtime());
