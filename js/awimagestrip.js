@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Read configuration from data attributes
     const speed = parseInt(container.dataset.speed) || 5000;
     const pauseOnHover = container.dataset.pauseOnHover === 'hover';
-    const wrap = container.dataset.wrap === 'true';
 
     let currentIndex = 0;
     let autoplayInterval = null;
@@ -55,12 +54,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function nextSlide() {
       if (currentIndex < slides.length - 1) {
         scrollToSlide(currentIndex + 1);
-      } else if (wrap) {
+      } else {
         // Loop back to first slide
         scrollToSlide(0);
-      } else {
-        // Stop autoplay when reaching the end
-        stopAutoplay();
       }
     }
 
