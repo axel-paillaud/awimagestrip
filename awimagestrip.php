@@ -513,11 +513,16 @@ class AwImageStrip extends Module implements WidgetInterface
                     $salt = sha1(microtime());
                     $original_name = pathinfo($_FILES['image_' . $language['id_lang']]['name'], PATHINFO_FILENAME);
                     $file_name = Tools::str2url($original_name) . '.' . $type;
+
+                    // Fixed dimensions for portrait ratio 3:4
+                    $target_width = 800;
+                    $target_height = 1066; // 800 * 4/3 = 1066
+
                     if ($error = ImageManager::validateUpload($_FILES['image_' . $language['id_lang']])) {
                         $errors[] = $error;
                     } elseif (!$temp_name || !move_uploaded_file($_FILES['image_' . $language['id_lang']]['tmp_name'], $temp_name)) {
                         return false;
-                    } elseif (!ImageManager::resize($temp_name, __DIR__ . '/images/' . $salt . '_' . $file_name, null, null, $type)) {
+                    } elseif (!$this->resizeAndCropImage($temp_name, __DIR__ . '/images/' . $salt . '_' . $file_name, $target_width, $target_height, $type)) {
                         $errors[] = $this->displayError($this->trans('An error occurred during the image upload process.', [], 'Admin.Notifications.Error'));
                     }
                     if (file_exists($temp_name)) {
@@ -1107,5 +1112,119 @@ class AwImageStrip extends Module implements WidgetInterface
         return '<p class="alert alert-warning">' .
             $this->trans('This slide is shared with other shops! All shops associated to this slide will apply modifications made here', [], 'Modules.Awimagestrip.Admin') .
             '</p>';
+    }
+
+    /**
+     * Resize and crop image to exact dimensions (cover mode)
+     *
+     * @param string $source Source file path
+     * @param string $destination Destination file path
+     * @param int $target_width Target width
+     * @param int $target_height Target height
+     * @param string $type Image type (jpg, png, webp, etc.)
+     * @return bool Success status
+     */
+    protected function resizeAndCropImage($source, $destination, $target_width, $target_height, $type)
+    {
+        // Get source image dimensions
+        list($source_width, $source_height, $source_type) = @getimagesize($source);
+
+        if (!$source_width || !$source_height) {
+            return false;
+        }
+
+        // Calculate ratios to determine how to crop
+        $source_ratio = $source_width / $source_height;
+        $target_ratio = $target_width / $target_height;
+
+        // Calculate dimensions to cover the target area
+        if ($source_ratio > $target_ratio) {
+            // Source is wider, fit by height
+            $temp_height = $target_height;
+            $temp_width = (int) round($source_width * $target_height / $source_height);
+        } else {
+            // Source is taller, fit by width
+            $temp_width = $target_width;
+            $temp_height = (int) round($source_height * $target_width / $source_width);
+        }
+
+        // Create source image resource
+        switch ($source_type) {
+            case IMAGETYPE_JPEG:
+                $source_image = imagecreatefromjpeg($source);
+                break;
+            case IMAGETYPE_PNG:
+                $source_image = imagecreatefrompng($source);
+                break;
+            case IMAGETYPE_GIF:
+                $source_image = imagecreatefromgif($source);
+                break;
+            case IMAGETYPE_WEBP:
+                $source_image = imagecreatefromwebp($source);
+                break;
+            default:
+                return false;
+        }
+
+        if (!$source_image) {
+            return false;
+        }
+
+        // Create temporary resized image
+        $temp_image = imagecreatetruecolor($temp_width, $temp_height);
+
+        // Preserve transparency for PNG and WebP
+        if (in_array($type, ['png', 'webp'])) {
+            imagealphablending($temp_image, false);
+            imagesavealpha($temp_image, true);
+            $transparent = imagecolorallocatealpha($temp_image, 0, 0, 0, 127);
+            imagefilledrectangle($temp_image, 0, 0, $temp_width, $temp_height, $transparent);
+        }
+
+        // Resize source to temp
+        imagecopyresampled($temp_image, $source_image, 0, 0, 0, 0, $temp_width, $temp_height, $source_width, $source_height);
+
+        // Create final image with exact dimensions
+        $final_image = imagecreatetruecolor($target_width, $target_height);
+
+        // Preserve transparency for PNG and WebP
+        if (in_array($type, ['png', 'webp'])) {
+            imagealphablending($final_image, false);
+            imagesavealpha($final_image, true);
+            $transparent = imagecolorallocatealpha($final_image, 0, 0, 0, 127);
+            imagefilledrectangle($final_image, 0, 0, $target_width, $target_height, $transparent);
+        }
+
+        // Calculate crop position (centered)
+        $crop_x = (int) round(($temp_width - $target_width) / 2);
+        $crop_y = (int) round(($temp_height - $target_height) / 2);
+
+        // Copy cropped portion to final image
+        imagecopy($final_image, $temp_image, 0, 0, $crop_x, $crop_y, $target_width, $target_height);
+
+        // Save final image
+        $result = false;
+        switch ($type) {
+            case 'jpg':
+            case 'jpeg':
+                $result = imagejpeg($final_image, $destination, 90);
+                break;
+            case 'png':
+                $result = imagepng($final_image, $destination, 7);
+                break;
+            case 'gif':
+                $result = imagegif($final_image, $destination);
+                break;
+            case 'webp':
+                $result = imagewebp($final_image, $destination, 90);
+                break;
+        }
+
+        // Free memory
+        imagedestroy($source_image);
+        imagedestroy($temp_image);
+        imagedestroy($final_image);
+
+        return $result;
     }
 }
