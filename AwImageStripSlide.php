@@ -69,8 +69,15 @@ class AwImageStripSlide extends ObjectModel
         $images = $this->image;
         foreach ($images as $image) {
             if (preg_match('/sample/', $image) === 0) {
+                // Delete desktop version
                 if ($image && file_exists(__DIR__ . '/images/' . $image)) {
                     $res &= @unlink(__DIR__ . '/images/' . $image);
+                }
+                
+                // Delete mobile version (replace extension with -mobile.extension)
+                $mobile_image = preg_replace('/\.([^.]+)$/', '-mobile.$1', $image);
+                if ($mobile_image && file_exists(__DIR__ . '/images/' . $mobile_image)) {
+                    $res &= @unlink(__DIR__ . '/images/' . $mobile_image);
                 }
             }
         }

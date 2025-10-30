@@ -512,23 +512,29 @@ class AwImageStrip extends Module implements WidgetInterface
                     $temp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
                     $salt = sha1(microtime());
                     $original_name = pathinfo($_FILES['image_' . $language['id_lang']]['name'], PATHINFO_FILENAME);
-                    $file_name = Tools::str2url($original_name) . '.' . $type;
-
-                    // Fixed dimensions for portrait ratio 3:4
-                    $target_width = 800;
-                    $target_height = 1066; // 800 * 4/3 = 1066
+                    $file_name_base = Tools::str2url($original_name);
 
                     if ($error = ImageManager::validateUpload($_FILES['image_' . $language['id_lang']])) {
                         $errors[] = $error;
                     } elseif (!$temp_name || !move_uploaded_file($_FILES['image_' . $language['id_lang']]['tmp_name'], $temp_name)) {
                         return false;
-                    } elseif (!$this->resizeAndCropImage($temp_name, __DIR__ . '/images/' . $salt . '_' . $file_name, $target_width, $target_height, $type)) {
-                        $errors[] = $this->displayError($this->trans('An error occurred during the image upload process.', [], 'Admin.Notifications.Error'));
+                    } else {
+                        // Generate desktop version (800x1066px)
+                        $file_name_desktop = $file_name_base . '.' . $type;
+                        $desktop_success = $this->resizeAndCropImage($temp_name, __DIR__ . '/images/' . $salt . '_' . $file_name_desktop, 800, 1066, $type);
+                        
+                        // Generate mobile version (600x800px)
+                        $file_name_mobile = $file_name_base . '-mobile.' . $type;
+                        $mobile_success = $this->resizeAndCropImage($temp_name, __DIR__ . '/images/' . $salt . '_' . $file_name_mobile, 600, 800, $type);
+                        
+                        if (!$desktop_success || !$mobile_success) {
+                            $errors[] = $this->displayError($this->trans('An error occurred during the image upload process.', [], 'Admin.Notifications.Error'));
+                        }
                     }
                     if (file_exists($temp_name)) {
                         @unlink($temp_name);
                     }
-                    $slide->image[$language['id_lang']] = $salt . '_' . $file_name;
+                    $slide->image[$language['id_lang']] = $salt . '_' . $file_name_base . '.' . $type;
                 } elseif (Tools::getValue('image_old_' . $language['id_lang']) != '') {
                     $slide->image[$language['id_lang']] = Tools::getValue('image_old_' . $language['id_lang']);
                 }
@@ -737,6 +743,11 @@ class AwImageStrip extends Module implements WidgetInterface
 
         foreach ($slides as &$slide) {
             $slide['image_url'] = $this->context->link->getMediaLink(_MODULE_DIR_ . 'awimagestrip/images/' . $slide['image']);
+            
+            // Generate mobile image URL (replace extension with -mobile.extension)
+            $mobile_image = preg_replace('/\.([^.]+)$/', '-mobile.$1', $slide['image']);
+            $slide['image_url_mobile'] = $this->context->link->getMediaLink(_MODULE_DIR_ . 'awimagestrip/images/' . $mobile_image);
+            
             $slide['url'] = $this->validateUrl($slide['url']);
         }
 

@@ -27,7 +27,10 @@
       {foreach from=$awimagestrip.slides item=slide}
         <div class="awimagestrip-slide">
           {if !empty($slide.url)}<a href="{$slide.url}" class="awimagestrip-link">{/if}
-            <img src="{$slide.image_url}" alt="{$slide.legend|escape}" class="awimagestrip-image" width="640" height="853" />
+            <picture>
+              <source media="(max-width: 768px)" srcset="{$slide.image_url_mobile}" width="600" height="800">
+              <img src="{$slide.image_url}" alt="{$slide.legend|escape}" class="awimagestrip-image" width="800" height="1066" />
+            </picture>
             {if $slide.title || $slide.description}
               <div class="awimagestrip-caption-wrapper">
                 {if $slide.title}
