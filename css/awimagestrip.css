@@ -135,7 +135,9 @@
 
 @media (max-width: 768px) {
   .awimagestrip-container {
-    max-width: 100%;
+    max-width: 516px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .awimagestrip-grid {
@@ -146,8 +148,6 @@
     -webkit-overflow-scrolling: touch;
     gap: 0;
     scrollbar-width: none; /* Firefox */
-    /* Reset justify-content to start from the first slide */
-    justify-content: flex-start;
   }
 
   .awimagestrip-grid::-webkit-scrollbar {
@@ -157,7 +157,7 @@
   .awimagestrip-slide {
     flex: 0 0 100%;
     width: 100%;
-    scroll-snap-align: start;
+    scroll-snap-align: center;
   }
 
   .awimagestrip-image {
